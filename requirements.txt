@@ -1,0 +1,12 @@
+beautifulsoup4
+requests
+
+langchain-core
+langchain-text-splitters
+langchain-community
+langchain-ollama
+
+chromadb
+
+sentence-transformers
+torch
