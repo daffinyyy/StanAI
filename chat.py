@@ -13,11 +13,11 @@ while True:
         break
 
     # 🔍 DEBUG
-    print("\n🔍 DEBUG EMBEDDING (similarity_search_with_score):")
-    debug_results = db.similarity_search_with_score(query, k=5)
-    for doc, score in debug_results:
-        print(f"\nScore: {score}")
-        print("Metadata:", doc.metadata)
+    # print("\n🔍 DEBUG EMBEDDING (similarity_search_with_score):")
+    # debug_results = db.similarity_search_with_score(query, k=5)
+    # for doc, score in debug_results:
+    #     print(f"\nScore: {score}")
+    #     print("Metadata:", doc.metadata)
 
 
     results = db.similarity_search(query, k=10)
@@ -45,8 +45,8 @@ while True:
         context += r.page_content + "\n\n"
 
     #DEBUG  
-    print("\n===== CONTEXTO REAL =====\n")
-    print(context)
+    # print("\n===== CONTEXTO REAL =====\n")
+    # print(context)
 
     answer = generate_answer(llm, query, context)
 
