@@ -4,9 +4,10 @@ from ingestion.clean_text import clean_html
 
 from rag.chunking import create_documents, chunk_documents
 from rag.embeddings import create_vector_db
+from rag.wiki_paths import DEFAULT_WIKI_BASE_URL
 
 # config
-fandom_url = "https://viscera-cleanup-detail.fandom.com"
+fandom_url = DEFAULT_WIKI_BASE_URL
 api_url = fandom_url + "/api.php"
 
 print("Buscando páginas...")
@@ -42,6 +43,6 @@ print("Criando chunks...")
 chunks = chunk_documents(documents)
 
 print("Gerando embeddings e salvando DB...")
-db = create_vector_db(chunks)
+db = create_vector_db(chunks, fandom_url)
 
 print("Ingestão concluída!")
