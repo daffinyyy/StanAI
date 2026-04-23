@@ -1,12 +1,14 @@
+import os
+
 from langchain_ollama import ChatOllama
 
 
 def get_llm():
-    llm = ChatOllama(
-        model="qwen2:7b",
-        temperature=0
+    return ChatOllama(
+        model=os.environ.get("OLLAMA_MODEL", "qwen2:7b"),
+        temperature=0,
+        base_url=os.environ.get("OLLAMA_BASE_URL", "http://127.0.0.1:11434"),
     )
-    return llm
 
 
 def generate_answer(llm, query, context):
