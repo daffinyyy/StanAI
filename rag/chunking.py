@@ -2,14 +2,17 @@ import re
 from langchain_core.documents import Document
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
+from rag.wiki_paths import normalize_wiki_base_url
+
 
 def create_documents(pages, fandom_url):
+    base = normalize_wiki_base_url(fandom_url).rstrip("/")
     docs = []
 
     for page in pages:
         title = page["title"]
         text = page["text"]
-        url = f"{fandom_url}/wiki/{title.replace(' ', '_')}"
+        url = f"{base}/wiki/{title.replace(' ', '_')}"
 
         doc = Document(
             page_content=f"# {title}\n\n{text}",

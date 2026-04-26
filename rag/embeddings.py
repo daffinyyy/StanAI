@@ -6,6 +6,23 @@ from langchain_community.vectorstores import Chroma
 
 from rag.wiki_paths import chroma_dir_has_data, normalize_wiki_base_url, wiki_vector_store_relpath
 
+
+def vector_index_available(wiki_base_url: str) -> tuple[bool, bool]:
+    """
+    Indica se existe índice vetorial para a wiki (sem abrir o Chroma).
+
+    Retorna ``(tem_índice, é_legado)``: o segundo é True só se existir ``./chroma_db``
+    antigo e não houver pasta ``chroma_dbs/<hash>`` com dados.
+    """
+    normalized = normalize_wiki_base_url(wiki_base_url)
+    persist = Path(wiki_vector_store_relpath(normalized))
+    if chroma_dir_has_data(persist):
+        return True, False
+    legacy = Path("chroma_db")
+    if chroma_dir_has_data(legacy):
+        return True, True
+    return False, False
+
 # Instância única: evita recarregar pesos do modelo a cada ingestão ou primeiro search.
 _embeddings: HuggingFaceEmbeddings | None = None
 
