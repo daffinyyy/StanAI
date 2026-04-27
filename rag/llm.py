@@ -6,7 +6,7 @@ from langchain_ollama import ChatOllama
 def get_llm():
     return ChatOllama(
         model=os.environ.get("OLLAMA_MODEL", "qwen2:7b"),
-        temperature=0,
+        temperature=0.1,
         base_url=os.environ.get("OLLAMA_BASE_URL", "http://127.0.0.1:11434"),
     )
 

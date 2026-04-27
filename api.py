@@ -1,6 +1,8 @@
 from contextlib import asynccontextmanager
+import os
 
 from fastapi import FastAPI, HTTPException, Request
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
 from api_schemas import (
@@ -30,6 +32,23 @@ app = FastAPI(
         "Sem índice e com auto_ingest, a ingestão roda em background (veja GET /ingest/jobs/{job_id})."
     ),
     lifespan=lifespan,
+)
+
+# Permite configurar origens via env (ex.: STANAI_CORS_ORIGINS="http://localhost:5173,http://127.0.0.1:5173").
+cors_origins = [
+    origin.strip()
+    for origin in os.getenv(
+        "STANAI_CORS_ORIGINS",
+        "http://localhost:5173,http://127.0.0.1:5173",
+    ).split(",")
+    if origin.strip()
+]
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=cors_origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 
