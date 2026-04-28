@@ -1,8 +1,20 @@
 # StanAI
+![banner de apresentação](imagens_docs\StanAI_banner.png)
+
+Já precisou pesquisar a resposta do puzzle no meio da gameplay? Esqueceu qual episódio aquele personagem aparece? Precisou consultar as habilidades de um personagem?  
+
+O **StanAI** se baseia em **wikis do Fandom** para tirar suas dúvidas sobre cultura nerd. Informe sobre qual wiki do Fandom você quer discutir e pergunte ao Stan!  
+
+## Por que usar o StanAI?
+- Sem perder tempo procurando pelo artigo certo na wiki;
+- Sem ser bombardeado por anúncios; 
+- Resposta no seu idioma.
 
 ---
 
 ## Visão geral do fluxo
+
+![visão geral do pipeline](imagens_docs\StanAI_pipeline.png)
 
 1. **Ingestão** (`ingest.py`) — define a URL base da wiki, baixa conteúdo, cria chunks e persiste vetores em `chroma_dbs/<hash>/` (um diretório por wiki normalizada).
 2. **Consulta** — `chat.py` (CLI) ou `api.py` (FastAPI): busca trechos semelhantes, monta contexto e o LLM gera a resposta em português.
