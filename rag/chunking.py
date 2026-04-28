@@ -2,14 +2,17 @@ import re
 from langchain_core.documents import Document
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
+from rag.wiki_paths import normalize_wiki_base_url
+
 
 def create_documents(pages, fandom_url):
+    base = normalize_wiki_base_url(fandom_url).rstrip("/")
     docs = []
 
     for page in pages:
         title = page["title"]
         text = page["text"]
-        url = f"{fandom_url}/wiki/{title.replace(' ', '_')}"
+        url = f"{base}/wiki/{title.replace(' ', '_')}"
 
         doc = Document(
             page_content=f"# {title}\n\n{text}",
@@ -50,8 +53,8 @@ def split_by_sections(text):
 
 def chunk_documents(documents):
     splitter = RecursiveCharacterTextSplitter(
-        chunk_size=500, 
-        chunk_overlap=80
+        chunk_size=700, 
+        chunk_overlap=100
     )
 
     final_chunks = []
@@ -68,7 +71,7 @@ def chunk_documents(documents):
             for chunk in chunks:
                 final_chunks.append(
                     Document(
-                        page_content=f"{doc.metadata['title']}\n{section_title}\n\n{chunk}",
+                        page_content=f"This section is about {section_title} of {doc.metadata['title']}.\n\n{chunk}",
                         metadata={
                             **doc.metadata,
                             "section": section_title

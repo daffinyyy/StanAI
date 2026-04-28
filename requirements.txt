@@ -10,3 +10,7 @@ chromadb
 
 sentence-transformers
 torch
+
+fastapi
+uvicorn[standard]
+pydantic>=2

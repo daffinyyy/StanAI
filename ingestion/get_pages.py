@@ -1,5 +1,8 @@
 import requests
 
+from rag.wiki_paths import normalize_wiki_base_url
+
+
 def get_all_pages(fandom_url):
     """
     Retorna:
@@ -8,6 +11,7 @@ def get_all_pages(fandom_url):
     - total de páginas
     """
 
+    fandom_url = normalize_wiki_base_url(fandom_url)
     api_url = fandom_url.rstrip("/") + "/api.php"
 
     titles = []

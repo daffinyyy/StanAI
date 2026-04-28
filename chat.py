@@ -1,7 +1,14 @@
-from rag.embeddings import load_vector_db
-from rag.llm import get_llm, generate_answer
+import os
 
-db = load_vector_db()
+from rag.embeddings import get_cached_vector_store
+from rag.llm import get_llm
+from rag.query import run_rag_query
+from rag.wiki_paths import DEFAULT_WIKI_BASE_URL, normalize_wiki_base_url
+
+wiki = normalize_wiki_base_url(
+    os.environ.get("STANAI_WIKI_URL", DEFAULT_WIKI_BASE_URL)
+)
+db, _legacy = get_cached_vector_store(wiki)
 llm = get_llm()
 
 print("Chat iniciado (digite 'sair' pra parar)\n")
@@ -20,34 +27,6 @@ while True:
     #     print("Metadata:", doc.metadata)
 
 
-    results = db.similarity_search(query, k=10)
-
-    #deduplica
-    unique_results = []
-    seen_titles = set()
-
-    for r in results:
-        title = r.metadata["title"]
-
-        if title not in seen_titles:
-            unique_results.append(r)
-            seen_titles.add(title)
-
-        if len(unique_results) == 7:
-            break
-
-    context = ""
-    for r in results[:7]:
-        title = r.metadata["title"]
-        section = r.metadata.get("section", "")
-
-        context += f"\n[Título: {title} | Seção: {section}]\n"
-        context += r.page_content + "\n\n"
-
-    #DEBUG  
-    # print("\n===== CONTEXTO REAL =====\n")
-    # print(context)
-
-    answer = generate_answer(llm, query, context)
+    answer, _sources = run_rag_query(db, llm, query)
 
     print("\n🦫 Stan:", answer, "\n")
