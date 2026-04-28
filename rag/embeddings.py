@@ -31,7 +31,10 @@ def _get_embeddings() -> HuggingFaceEmbeddings:
     """Retorna o embedder singleton (lazy init na primeira chamada)."""
     global _embeddings
     if _embeddings is None:
-        _embeddings = HuggingFaceEmbeddings(model_name="BAAI/bge-m3")
+        _embeddings = HuggingFaceEmbeddings(
+            model_name="intfloat/multilingual-e5-small", 
+            encode_kwargs={"batch_size": 64}
+            )
     return _embeddings
 
 
@@ -46,10 +49,18 @@ def create_vector_db(chunks, wiki_base_url: str):
     persist_directory = wiki_vector_store_relpath(normalized)
     Path(persist_directory).mkdir(parents=True, exist_ok=True)
 
+    texts = [doc.page_content for doc in chunks]
+    metadatas = [doc.metadata for doc in chunks]
+
     db = Chroma.from_documents(
         chunks,
         _get_embeddings(),
         persist_directory=persist_directory,
+    )
+
+    db.add_texts(
+        texts=texts,
+        metadatas=metadatas
     )
     return db
 

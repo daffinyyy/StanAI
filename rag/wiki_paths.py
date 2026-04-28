@@ -4,7 +4,7 @@ from urllib.parse import urlparse
 
 # Raiz da wiki (scheme + host). Pode ser qualquer página da wiki na ingestão/API:
 # ``normalize_wiki_base_url`` reduz à origem para api.php e para a pasta do Chroma.
-DEFAULT_WIKI_BASE_URL = "https://ordemparanormal.fandom.com"
+DEFAULT_WIKI_BASE_URL = "https://viscera-cleanup-detail.fandom.com"
 
 
 # normaliza a url da wiki (ex.: https://algo.fandom.com)

@@ -53,8 +53,8 @@ def split_by_sections(text):
 
 def chunk_documents(documents):
     splitter = RecursiveCharacterTextSplitter(
-        chunk_size=500, 
-        chunk_overlap=80
+        chunk_size=700, 
+        chunk_overlap=100
     )
 
     final_chunks = []
@@ -71,7 +71,7 @@ def chunk_documents(documents):
             for chunk in chunks:
                 final_chunks.append(
                     Document(
-                        page_content=f"{doc.metadata['title']}\n{section_title}\n\n{chunk}",
+                        page_content=f"This section is about {section_title} of {doc.metadata['title']}.\n\n{chunk}",
                         metadata={
                             **doc.metadata,
                             "section": section_title

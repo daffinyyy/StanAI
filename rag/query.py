@@ -14,7 +14,7 @@ def run_rag_query(db: VectorStore, llm, query: str) -> tuple[str, list[dict]]:
     Retorna ``(answer, sources)`` onde ``sources`` é uma lista de
     ``{"title", "section"}`` alinhada aos trechos usados no contexto.
     """
-    results = db.similarity_search(query, k=10)
+    results = db.similarity_search(query, k=15)
 
     unique_results: list = []
     seen_titles: set[str] = set()
