@@ -1,13 +1,15 @@
 import os
 
-from langchain_ollama import ChatOllama
+from crewai import LLM
 
 
 def get_llm():
-    return ChatOllama(
-        model=os.environ.get("OLLAMA_MODEL", "qwen2:7b"),
-        temperature=0.1,
-        base_url=os.environ.get("OLLAMA_BASE_URL", "http://127.0.0.1:11434"),
+    return LLM(
+        model=f"ollama/{os.environ.get('OLLAMA_MODEL', 'qwen2:7b')}",
+        base_url=os.environ.get(
+            "OLLAMA_BASE_URL",
+            "http://127.0.0.1:11434"
+        ),
     )
 
 

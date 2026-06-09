@@ -16,6 +16,7 @@ from ingestion.ingest_jobs import get_ingest_job, start_ingest_if_needed
 from rag.embeddings import get_cached_vector_store, vector_index_available
 from rag.llm import get_llm
 from rag.query import run_rag_query
+from crew.stan_crew import create_stan_crew
 
 
 @asynccontextmanager
@@ -111,24 +112,31 @@ async def chat(body: ChatRequest, request: Request):
             )
             return JSONResponse(status_code=202, content=pending.model_dump())
 
-        db, legacy = get_cached_vector_store(wiki)
     except ValueError as exc:
         raise HTTPException(status_code=422, detail=str(exc)) from exc
     except FileNotFoundError as exc:
         raise HTTPException(status_code=404, detail=str(exc)) from exc
 
     try:
-        answer, sources = run_rag_query(
-            db,
-            request.app.state.llm,
-            body.message.strip(),
+        crew = create_stan_crew(
+            llm=request.app.state.llm,
+            wiki_url=body.wiki_url
         )
+
+        result = await crew.kickoff_async(
+            inputs={
+                "question": body.message.strip()
+            }
+        )
+
+        answer = str(result)
+        sources = []
     except Exception as exc:  # noqa: BLE001 — fronteira HTTP
         raise HTTPException(status_code=500, detail=str(exc)) from exc
 
     return ChatResponse(
         wiki_url=wiki,
         answer=answer,
-        sources=[SourceItem(**s) for s in sources],
-        used_legacy_vector_store=legacy,
+        sources=[],
+        used_legacy_vector_store=False
     )

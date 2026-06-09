@@ -5,6 +5,10 @@ langchain-core
 langchain-text-splitters
 langchain-community
 langchain-ollama
+crewai
+crewai_tools
+openai 
+duckduckgo-search
 
 chromadb
 
